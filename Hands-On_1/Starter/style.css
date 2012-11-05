@@ -1,0 +1,14 @@
+body > header {
+	text-align: center;
+	background-image: url('images/jseverywhere.png');
+	background-size: contain;
+	background-position: right;
+	background-repeat: no-repeat;
+}
+
+body > footer {
+	text-align: center;
+	font-style: italic;
+	padding: 20px;
+	clear: both;
+}

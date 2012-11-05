@@ -1,0 +1,86 @@
+body > header {
+	text-align: center;
+	background-image: url('images/jseverywhere.png');
+	background-size: contain;
+	background-position: right;
+	background-repeat: no-repeat;
+}
+
+body > footer {
+	text-align: center;
+	font-style: italic;
+	padding: 20px;
+	clear: both;
+}
+
+.todo {
+	background-image: url(images/post-it.png);
+	background-size: 200px;
+	background-repeat: no-repeat;
+	width: 200px;
+	height: 200px;
+	float: left;
+	position: relative;
+	text-align: center;
+}
+
+.todo > * {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.todo > header {
+	font-weight: bold;
+	padding-top: 10px;
+}
+
+.todo > p {
+	font-size: 90%;
+	height: 80px;
+	overflow-y: scroll;
+}
+
+.todo > footer {
+	padding-top: 10px;
+	font-style: italic;
+	-ms-transform: rotate(-3deg);
+	-webkit-transform: rotate(-3deg);
+	-moz-transform: rotate(-3deg);
+	-o-transform: rotate(-3deg);
+	transform: rotate(-3deg);
+}
+
+.todos > .add-todo {
+	display: block;
+	clear: both;
+	text-align: center;
+	padding-top: 20px;
+}
+
+#addTodoForm > div {
+	padding: 10px;
+}
+
+#addTodoForm input, #addTodoForm textarea, #addTodoForm label {
+	margin: 5px;
+}
+
+#addTodoForm textarea {
+	display: block;
+	width: 90%;
+	height: 80px;
+}
+
+#addTodoForm input[type='button'] {
+	display: block;
+	margin: auto;
+	width: 30%;
+}
+
+#facebox h2 {
+	text-align: center;
+}
+
+.error {
+	color: red;
+}
