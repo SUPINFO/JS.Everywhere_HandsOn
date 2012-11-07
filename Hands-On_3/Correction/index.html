@@ -1,0 +1,73 @@
+<!doctype html>
+<html manifest="site.manifest">
+<head>
+	<title>JS.todoList()</title>
+	<meta charset="utf-8" />
+	<meta name="description" content="JS.todoList() is a simple HTML5 TodoList application developped for a JS.everywhere() Hands-on!" />
+	<link rel="stylesheet" href="style.css" />
+	<link rel="stylesheet" href="lib/facebox/facebox.css" />
+	<script type="text/javascript" src="lib/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="lib/mustache.js"></script>
+	<script type="text/javascript" src="lib/facebox/facebox.js"></script>
+	<script type="text/javascript" src="src/rest-client.js"></script>
+	<script type="text/javascript" src="src/todo-storage.js"></script>
+	<script type="text/javascript" src="src/todo-adapter.js"></script>
+	<script type="text/javascript">
+		$(document).ready( function() {
+			$.get("templates/_todo.html", function(template) {
+				todoAdapter.getAllTodos( function(todos) {
+					todos.forEach( function(todo) {
+						var todoHtml = Mustache.render(template, todo);
+						$(".todos").prepend(todoHtml);
+					});
+				});
+
+				$(".todos > a.add-todo").click( function() {
+					displayAddTodoForm();
+				});
+
+				function displayTodo(todo) {
+					var todoHtml = Mustache.render(template, todo);
+					$(".todos").prepend(todoHtml);
+				}
+
+				function displayAddTodoForm() {
+					$.facebox({
+						ajax: "templates/_addTodo.html", 
+						callback: function() {
+							$("#addTodoButton").click( function() {
+								addTodo({
+									title: $("#addTodoForm input[name='title']").val(),
+									description: $("#addTodoForm textarea[name='description']").val(),
+									deadLine: $("#addTodoForm input[name='deadLine']").val()
+								});
+							});
+						}
+					});
+				}
+
+				function addTodo(todo) {
+					if(todo.title) {
+						todoAdapter.addTodo(todo);
+						$(document).trigger('close.facebox');
+						displayTodo(todo);
+					} else {
+						$('#error-message').html("You have to enter a name for your todo!");
+					}
+				}
+			});
+		});
+	</script>
+</head>
+<body>
+	<header>
+		<h1>JS.todoList()</h1>
+	</header>
+	<section class="todos">
+		<a class="add-todo" href="#">Add a todo</a>
+	</section>
+	<footer>
+		<a rel="license" href="http://creativecommons.org/licenses/by/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a> This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/deed.en_US">Creative Commons Attribution 3.0 Unported License</a>.
+	</footer>
+</body>
+</html>
