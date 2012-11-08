@@ -37,7 +37,7 @@ body > footer {
 .todo > p {
 	font-size: 90%;
 	height: 80px;
-	overflow-y: scroll;
+	/*overflow-y: scroll;*/
 }
 
 .todo > footer {
