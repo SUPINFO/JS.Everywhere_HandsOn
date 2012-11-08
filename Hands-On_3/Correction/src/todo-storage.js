@@ -1,33 +1,22 @@
-var localTodoStorage = {
+var todoStorage = {
 
-	addUnsyncTodo: function(todo) {
-		var lastIndex = localStorage.getItem("Todo:lastIndex"),
-			newId = ++lastIndex;
-
-		localStorage.setItem("Todo:tmp:lastIndex", newId);
-		localStorage.setItem("Todo:tmp:" + newId, JSON.stringify(todo));
+	setTodos: function(todos) {
+		localStorage.setItem("Todos", JSON.stringify(todos));
 	},
 
-	addSyncTodo: function(todo, todoId) {
-		localStorage.setItem("Todo:" + todoId, JSON.stringify(todo));
+	addTodo: function(todo) {
+		var localTodos = JSON.parse(localStorage.getItem("Todos"));
+		if(localTodos) {
+			localTodos.push(todo);
+		} else {
+			localTodos = [todo];
+		}
+		localStorage.setItem("Todos", JSON.stringify(localTodos));
 	},
 
 	getAllTodos: function() {
-		var results = [],
-			i = 0,
-			todo = localStorage.getItem("Todo:" + i);
-
-		while(todo) {
-			results.push(JSON.parse(todo));
-			todo = localStorage.getItem("Todo:" + (++i));
-		}
-
-		return results;
-	},
-
-	getTodo: function(todoId) {
-		var strTodo = localStorage.getItem("Todo:" + todoId);
-		return strTodo ? JSON.parse(strTodo) : strTodo;
+		var localTodos = JSON.parse(localStorage.getItem("Todos"));
+		return localTodos ? localTodos : [];
 	}
 
 };

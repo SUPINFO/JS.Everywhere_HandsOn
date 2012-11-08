@@ -3,7 +3,7 @@ var todoAdapter = {
 	addTodo: function(todo) {
 		restClient.addTodo(todo, function(err, todoId) {
 			if(!err) {
-				localTodoStorage.addSyncTodo(todo, todoId);
+				todoStorage.addTodo(todo);
 			} else {
 				console.log(err);
 			}
@@ -14,18 +14,14 @@ var todoAdapter = {
 		if(navigator.onLine) {
 			restClient.getAllTodos( function(err, todos) {
 				if(!err) {
-					todos.forEach( function(todo, index) {
-						if(!localTodoStorage.getTodo(index)) {
-							localTodoStorage.addSyncTodo(todo, index);
-						}
-					});
-					callback(todos);
+					todoStorage.setTodos(todos);
 				} else {
-					console.log(err);
+					todos = todoStorage.getAllTodos();
 				}
+				callback(err, todos);
 			});
 		} else {
-			callback(localTodoStorage.getAllTodos());
+			callback(null, todoStorage.getAllTodos());
 		}
 	}
 
