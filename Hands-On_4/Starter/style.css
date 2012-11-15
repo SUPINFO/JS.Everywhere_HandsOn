@@ -37,7 +37,7 @@ body > footer {
 .todo > p {
 	font-size: 90%;
 	height: 80px;
-	overflow-y: scroll;
+	/*overflow-y: scroll;*/
 }
 
 .todo > footer {
@@ -94,4 +94,5 @@ body > footer {
 	margin: auto;
 	text-align: center;
 	display: none;
+	list-style: none;
 }

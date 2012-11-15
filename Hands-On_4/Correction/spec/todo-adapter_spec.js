@@ -84,7 +84,7 @@ describe("Todo Adapter", function() {
 				spyOn(todoStorage, "addTodo");
 			});
 
-			it("must add the new todo to the server if not subscribed to the stream", function() {
+			it("must add the new todo to the localStorage if not subscribed to the stream", function() {
 				// Given
 				var todoId = 1;
 				restClient.addTodo.andCallFake( function(todo, callback) {

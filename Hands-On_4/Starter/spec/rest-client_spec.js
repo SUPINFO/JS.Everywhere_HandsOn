@@ -1,6 +1,6 @@
 describe("REST Client", function() {
 
-	var API_URI = "http://sheltered-oasis-7703.herokuapp.com/todos";
+	var API_URI = CONFIG.HOST + "/todos";
 
 	var callback, request;
 

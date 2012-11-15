@@ -8,7 +8,66 @@ describe("Todo Adapter", function() {
 	describe("online", function() {
 
 		beforeEach( function() {
-			window.navigator = { onLine: true };
+			spyOn(todoAdapter, "isOnLine").andReturn(true);
+		});
+
+		describe("subscribeToStream", function() {
+
+			var onMessageHandler, onErrorHandler;
+
+			beforeEach( function() {
+				// Given
+				onMessageHandler = jasmine.createSpy("onMessageHandler");
+				onErrorHandler = jasmine.createSpy("onErrorHandler");
+
+				spyOn(todosStream, "subscribe");
+				spyOn(todoStorage, "addTodo");
+			});
+
+			it(" must call todosStream.subscribe method" ,function() {
+				// When
+				todoAdapter.subscribeToStream(onMessageHandler, onErrorHandler);
+
+				// Then
+				expect(todosStream.subscribe).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function));
+			});
+
+			it(" must call first function in args on new message" ,function() {
+				// When
+				todoAdapter.subscribeToStream(onMessageHandler, onErrorHandler);
+				
+				var lastSubscribeCall = todosStream.subscribe.calls[0];
+				lastSubscribeCall.args[0](todos[0]);
+
+				// Then
+				expect(onMessageHandler).toHaveBeenCalledWith(todos[0]);
+			});
+
+			it(" must add one streamed todo to localStorage" ,function() {
+				// When
+				todoAdapter.subscribeToStream(onMessageHandler, onErrorHandler);
+				
+				var lastSubscribeCall = todosStream.subscribe.calls[0];
+				lastSubscribeCall.args[0](todos[0]);
+
+				// Then
+				expect(todoStorage.addTodo).toHaveBeenCalledWith(todos[0]);
+			});
+
+			it(" must add two streamed todos to localStorage" ,function() {
+				// When
+				todoAdapter.subscribeToStream(onMessageHandler, onErrorHandler);
+				
+				var lastSubscribeCall = todosStream.subscribe.calls[0];
+				lastSubscribeCall.args[0](todos[0]);
+				lastSubscribeCall.args[0](todos[1]);
+
+				// Then
+				expect(todoStorage.addTodo.callCount).toBe(2);
+				expect(todoStorage.addTodo.calls[0].args[0]).toBe(todos[0]);
+				expect(todoStorage.addTodo.calls[1].args[0]).toBe(todos[1]);
+			});
+
 		});
 
 		describe("addTodo", function() {
@@ -25,12 +84,13 @@ describe("Todo Adapter", function() {
 				spyOn(todoStorage, "addTodo");
 			});
 
-			it("must add Todo to the server and to the localStorage", function() {
+			it("must add the new todo to the localStorage if not subscribed to the stream", function() {
 				// Given
 				var todoId = 1;
 				restClient.addTodo.andCallFake( function(todo, callback) {
 					callback(null, todoId);
 				});
+				spyOn(todosStream, "isConnected").andReturn(false);
 
 				// When
 				todoAdapter.addTodo(goodTodo);
@@ -40,17 +100,19 @@ describe("Todo Adapter", function() {
 				expect(todoStorage.addTodo).toHaveBeenCalledWith(goodTodo);
 			});
 
-			it("must not add Todo to the localStorage if add to the server failed", function() {
+			it("must not add the new todo to the localStorage if subscribed to the stream", function() {
 				// Given
+				var todoId = 1;
 				restClient.addTodo.andCallFake( function(todo, callback) {
-					callback("Server error", null);
+					callback(null, todoId);
 				});
+				spyOn(todosStream, "isConnected").andReturn(true);
 
 				// When
-				todoAdapter.addTodo(badTodo);
+				todoAdapter.addTodo(goodTodo);
 
 				// Then
-				expect(restClient.addTodo).toHaveBeenCalledWith(badTodo, jasmine.any(Function));
+				expect(restClient.addTodo).toHaveBeenCalledWith(goodTodo, jasmine.any(Function));
 				expect(todoStorage.addTodo).not.toHaveBeenCalled();
 			});
 
@@ -98,12 +160,13 @@ describe("Todo Adapter", function() {
 			});
 
 		});
+
 	});
 
 	describe("offline", function() {
 
 		beforeEach( function() {
-			window.navigator = { onLine: false };
+			spyOn(todoAdapter, "isOnLine").andReturn(false);
 		});
 
 		describe("getAllTodos", function() {
@@ -115,7 +178,7 @@ describe("Todo Adapter", function() {
 				getAllTodosCallback = jasmine.createSpy("getAllTodosCallback");
 			});
 
-			it("must retrieve the Todos from the localStorage when offline", function() {
+			it(" must retrieve the Todos from the localStorage when offline", function() {
 				// Given
 				spyOn(todoStorage, "getAllTodos").andReturn(todos);
 
@@ -131,4 +194,35 @@ describe("Todo Adapter", function() {
 		});
 
 	});
+
+	describe("isConnectedToStream", function() {
+
+		beforeEach(function() {
+			spyOn(todosStream, "isConnected");
+		});
+
+		it(" must return true when todosStream says it's true", function() {
+			// Given
+			todosStream.isConnected.andReturn(true);
+
+			// When
+			var result = todoAdapter.isConnectedToStream();
+
+			// Then
+			expect(result).toBe(true);
+		});
+
+		it(" must return false when todosStream says it's false", function() {
+			// Given
+			todosStream.isConnected.andReturn(false);
+
+			// When
+			var result = todoAdapter.isConnectedToStream();
+
+			// Then
+			expect(result).toBe(false);
+		});
+
+	});
+
 });

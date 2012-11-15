@@ -1,1 +1,3 @@
-var todoAdapter = {};
+var todoAdapter = {
+
+};

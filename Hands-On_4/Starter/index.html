@@ -1,37 +1,48 @@
 <!doctype html>
-<html manifest="site.manifest">
+<html>
 <head>
 	<title>JS.todoList()</title>
 	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<meta name="description" content="JS.todoList() is a simple HTML5 TodoList application developped for a JS.everywhere() Hands-on!" />
 	<link rel="stylesheet" href="style.css" />
 	<link rel="stylesheet" href="lib/facebox/facebox.css" />
 	<script type="text/javascript" src="lib/jquery-1.8.2.min.js"></script>
 	<script type="text/javascript" src="lib/mustache.js"></script>
 	<script type="text/javascript" src="lib/facebox/facebox.js"></script>
+	<script type="text/javascript" src="src/config.js"></script>
 	<script type="text/javascript" src="src/rest-client.js"></script>
 	<script type="text/javascript" src="src/todo-storage.js"></script>
+	<script type="text/javascript" src="src/todos-stream.js"></script>
 	<script type="text/javascript" src="src/todo-adapter.js"></script>
 	<script type="text/javascript">
 		$(document).ready( function() {
 			$.get("templates/_todo.html", function(template) {
 				todoAdapter.getAllTodos( function(err, todos) {
-					var notification = err;
+					var notification;
+					if(err) { 
+						notification += "<li>" + err + "</li>"; 
+					}
 					if(todos) {
 						displayTodos(todos, template);
 						if(err) {
-							notification += " - Displayed Todos are from local storage."
+							notification += "<li>Displayed Todos are from local storage.</li>";
 						} else if(!navigator.onLine) {
-							notification = "You are offline. Displayed Todos are from local storage.";
+							notification = "<li>You are offline. Displayed Todos are from local storage.</li>";
 						}
 					}
-					if(notification) $("body > .information").text(notification).show();
+					if(notification) $("body > .information").html(notification).show();
 				});
 
 				var addTodoLink = $(".todos > a.add-todo");
 				if(navigator.onLine) {
 					addTodoLink.click( function() {
 						displayAddTodoForm();
+					});
+					todoAdapter.subscribeToStream( function(todo) {
+						displayTodo(todo, template);
+					}, function(e) {
+						$("body > .information").append("<li>Todos stream is closed.</li>").show();
 					});
 				} else {
 					addTodoLink.hide();
@@ -56,7 +67,9 @@
 					if(todo.title) {
 						todoAdapter.addTodo(todo);
 						$(document).trigger('close.facebox');
-						displayTodo(todo, template);
+						if(!todoAdapter.isConnectedToStream()) {
+							displayTodo(todo, template);
+						}
 					} else {
 						$('#error-message').html("You have to enter a name for your todo!");
 					}
@@ -81,7 +94,7 @@
 	<header>
 		<h1>JS.todoList()</h1>
 	</header>
-	<div class="information"></div>
+	<ul class="information"></ul>
 	<section class="todos">
 		<a class="add-todo" href="#">Add a todo</a>
 	</section>

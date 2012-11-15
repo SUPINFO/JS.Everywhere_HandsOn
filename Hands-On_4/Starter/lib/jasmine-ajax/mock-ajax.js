@@ -112,19 +112,19 @@ function FakeXMLHttpRequest() {
     }
   });
 
-  return this;
+return this;
 }
 
 
 jasmine.Ajax = {
 
   isInstalled: function() {
-    return jasmine.Ajax.installed == true;
+    return jasmine.Ajax.installed === true;
   },
 
   assertInstalled: function() {
     if (!jasmine.Ajax.isInstalled()) {
-      throw new Error("Mock ajax is not installed, use jasmine.Ajax.useMock()")
+      throw new Error("Mock ajax is not installed, use jasmine.Ajax.useMock()");
     }
   },
 
@@ -190,7 +190,7 @@ jasmine.Ajax = {
 
   installed: false,
   mode: null
-}
+};
 
 
 // Jasmine-Ajax Glue code for Prototype.js

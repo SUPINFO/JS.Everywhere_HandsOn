@@ -3,7 +3,7 @@
 <html>
 <head>
   <title>Jasmine Spec Runner</title>
-
+  <meta charset="UTF-8" />
   <link rel="shortcut icon" type="image/png" href="lib/jasmine-1.2.0/jasmine_favicon.png">
   <link rel="stylesheet" type="text/css" href="lib/jasmine-1.2.0/jasmine.css">
   <script type="text/javascript" src="lib/jquery-1.8.2.min.js"></script>
@@ -12,13 +12,16 @@
   <script type="text/javascript" src="lib/jasmine-ajax/mock-ajax.js"></script>
 
   <!-- include source files here... -->
+  <script type="text/javascript" src="src/config.js"></script>
   <script type="text/javascript" src="src/rest-client.js"></script>
   <script type="text/javascript" src="src/todo-storage.js"></script>
+  <script type="text/javascript" src="src/todos-stream.js"></script>
   <script type="text/javascript" src="src/todo-adapter.js"></script>
 
   <!-- include spec files here... -->
   <script type="text/javascript" src="spec/rest-client_spec.js"></script>
   <script type="text/javascript" src="spec/todo-storage_spec.js"></script>
+  <script type="text/javascript" src="spec/todos-stream_spec.js"></script>
   <script type="text/javascript" src="spec/todo-adapter_spec.js"></script>
   <script type="text/javascript" src="spec/helpers/test_responses.js"></script>
 

@@ -8,7 +8,7 @@ describe("Todo Adapter", function() {
 	describe("online", function() {
 
 		beforeEach( function() {
-			window.navigator = { onLine: true };
+			spyOn(todoAdapter, "isOnLine").andReturn(true);
 		});
 
 		describe("addTodo", function() {
@@ -103,7 +103,7 @@ describe("Todo Adapter", function() {
 	describe("offline", function() {
 
 		beforeEach( function() {
-			window.navigator = { onLine: false };
+			spyOn(todoAdapter, "isOnLine").andReturn(false);
 		});
 
 		describe("getAllTodos", function() {

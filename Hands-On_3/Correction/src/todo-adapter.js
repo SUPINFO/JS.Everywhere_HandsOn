@@ -1,5 +1,9 @@
 var todoAdapter = {
 
+	isOnLine: function() {
+		return navigator.onLine;
+	},
+
 	addTodo: function(todo) {
 		restClient.addTodo(todo, function(err, todoId) {
 			if(!err) {
@@ -11,7 +15,7 @@ var todoAdapter = {
 	},
 
 	getAllTodos: function(callback) {
-		if(navigator.onLine) {
+		if(this.isOnLine()) {
 			restClient.getAllTodos( function(err, todos) {
 				if(!err) {
 					todoStorage.setTodos(todos);

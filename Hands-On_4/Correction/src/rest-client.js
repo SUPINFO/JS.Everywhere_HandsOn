@@ -4,7 +4,6 @@ var restClient = {
 		$.ajax({
 			url: CONFIG.HOST + "/todos"
 		}).done(function(data) {
-			plop = data;
 			var todos;
 			if(typeof data === "object") {
 				todos = data.todos;

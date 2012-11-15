@@ -6,7 +6,13 @@ var restClient = {
 		$.ajax({
 			url: HOST + "/todos"
 		}).done(function(data) {
-			callback(null, data.todos);
+			var todos;
+			if(typeof data === "object") {
+				todos = data.todos;
+			} else {
+				todos = JSON.parse(data).todos;
+			}
+			callback(null, todos);
 		}).fail(function() {
 			callback("GET /todos error", null);
 		});

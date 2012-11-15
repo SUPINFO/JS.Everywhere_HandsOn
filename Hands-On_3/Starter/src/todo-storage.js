@@ -1,1 +1,3 @@
-var todoStorage = {};
+var todoStorage = {
+
+};
