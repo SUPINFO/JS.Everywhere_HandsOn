@@ -61,7 +61,7 @@ define(function(require, exports, module) {
 					$('#error-message').html("You have to enter a name for your todo!");
 				}
 			}
-		});
+		}, "html");
 
 		function displayTodos(todos, template) {
 			todos.forEach( function(todo) {
