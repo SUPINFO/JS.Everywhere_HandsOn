@@ -7,8 +7,8 @@ define(function(require, exports, module) {
 		$.get("templates/_todo.html", function(template) {
 			todoAdapter.getAllTodos( function(err, todos) {
 				var notification;
-				if(err) { 
-					notification += "<li>" + err + "</li>"; 
+				if(err) {
+					notification += "<li>" + err + "</li>";
 				}
 				if(todos) {
 					displayTodos(todos, template);
@@ -37,7 +37,7 @@ define(function(require, exports, module) {
 
 			function displayAddTodoForm() {
 				$.facebox({
-					ajax: "templates/_addTodo.html", 
+					ajax: "templates/_addTodo.html",
 					callback: function() {
 						$("#addTodoButton").click( function() {
 							addTodo({
